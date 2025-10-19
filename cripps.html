@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>حاسبة Cripps</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      font-family: 'Tajawal', sans-serif;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1c0000 100%);
+      background-size: 400% 400%;
+      animation: bgMove 10s ease infinite;
+    }
+
+    @keyframes bgMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .card {
+      background: rgba(25, 25, 25, 0.9);
+      border: 1px solid #a00000;
+      border-radius: 15px;
+      padding: 25px;
+      max-width: 420px;
+      width: 90%;
+      box-shadow: 0 0 25px rgba(255, 0, 0, 0.25);
+      text-align: center;
+      backdrop-filter: blur(5px);
+    }
+
+    h2 {
+      color: #ff2b2b;
+      text-shadow: 0 0 10px #ff0000;
+      margin-bottom: 15px;
+    }
+
+    p {
+      color: #ddd;
+      font-size: 16px;
+    }
+
+    input {
+      width: 80%;
+      padding: 10px;
+      font-size: 18px;
+      border-radius: 8px;
+      border: 1px solid #ff2b2b;
+      background: #000;
+      color: #fff;
+      text-align: center;
+      outline: none;
+      margin-top: 10px;
+      box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+      transition: all 0.3s;
+    }
+
+    input:focus {
+      box-shadow: 0 0 20px rgba(255, 50, 50, 0.6);
+    }
+
+    button {
+      margin-top: 12px;
+      padding: 10px 25px;
+      font-size: 18px;
+      background: linear-gradient(90deg, #b00000, #ff2b2b);
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 0 15px rgba(255, 0, 0, 0.4);
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(255, 0, 0, 0.6);
+    }
+
+    #result {
+      margin-top: 18px;
+      font-size: 17px;
+      line-height: 1.8;
+      color: #fff;
+      text-shadow: 0 0 6px #b00000;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h2>🧮 حاسبة Cripps</h2>
+    <p>أدخل النسبة الحالية (مثلاً 73)</p>
+    <input type="text" id="input" placeholder="مثال: 73 أو ٧٣">
+    <button onclick="calculate()">احسب</button>
+    <div id="result"></div>
+    <p style="margin-top:15px; font-size:14px; color:#aaa;">
+      🕒 فكرة وبرمجة <b style="color:#ff4444;">@TR111</b>
+    </p>
+  </div>
+
+  <script>
+    const MINUTES_PER_UNIT = 2; // 200 دقيقة ÷ 100%
+
+    function convertArabicDigits(str) {
+      const map = { '٠':0,'١':1,'٢':2,'٣':3,'٤':4,'٥':5,'٦':6,'٧':7,'٨':8,'٩':9 };
+      return str.replace(/[٠-٩]/g, d => map[d]);
+    }
+
+    function calculate() {
+      const rawInput = document.getElementById("input").value.trim();
+      const input = parseInt(convertArabicDigits(rawInput));
+      const resultBox = document.getElementById("result");
+
+      if (isNaN(input) || input < 0 || input >= 100) {
+        resultBox.innerHTML = "⚠️ أدخل رقماً ما بين 0 إلى 99 😍";
+        return;
+      }
+
+      const remaining = 100 - input;
+      const totalMinutes = remaining * MINUTES_PER_UNIT;
+      const hours = Math.floor(totalMinutes / 60);
+      const minutes = totalMinutes % 60;
+
+      let timeText = "";
+      if (hours > 0) timeText += `${hours} ساعة `;
+      if (minutes > 0 || hours === 0) timeText += `${minutes} دقيقة`;
+
+      resultBox.innerHTML = `
+        ⏳ النسبة الحالية: ${input}%<br>
+        🧮 الوقت المتبقي حتى الامتلاء: ${timeText}<br>
+        ⚠️ ملاحظة: مهمة Resupply غير محسوبة
+      `;
+    }
+  </script>
+
+</body>
+</html>
